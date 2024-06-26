@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+{% extends 'base.html' %}
+{% block mymessage %}
+<html>
+<head>
+    <title>Game Details</title>
+    <style>
+        body {
+            background-image: url("media/background.jpg") !important;
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+
+        .container {
+            max-width: 80%;
+            margin: 0 auto;
+            padding: 40px;
+        }
+
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+        }
+
+        p {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+        }
+
+        .jurisdiction-tag {
+            display: inline-block;
+            background-color: #f1f1f1;
+            color: #1c1c1c;
+            padding: 5px 10px;
+            border-radius: 4px;
+            margin-right: 5px;
+            margin-bottom: 5px;
+        }
+
+        .game-image {
+            height: 100%;
+            margin-bottom: 20px;
+        }
+
+        .video-container {
+            position: relative;
+            width: 100%;
+            padding-bottom: 56.25%;
+            overflow: hidden;
+        }
+
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .test{
+          aspect-ratio: 2/1;
+          margin: auto;
+          border: solid black 2px;
+          overflow-x: hidden;
+          overflow-y: hidden;
+          white-space: nowrap;
+          scroll-snap-type: x mandatory;
+        }
+
+    </style>
+</head>
+<body>
+<a href="{% url 'home' %}"><button>🡄 Go Back</button></a>
+<div class="container" style="background:rgba(255,255,255,0.5); border-radius:30px;">
+
+
+    <h1>{{ game.name }}</h1>
+
+    <p>Studio: {{ game.brand }}</p>
+    <p>Jurisdiction:
+        {% for jurisdiction in game.jurisdiction_set.all %}
+        <span class="jurisdiction-tag">[{{ jurisdiction.jurisdiction }}]</span>
+        {% endfor %}
+    </p>
+    <div class="test">
+    {% for image in game.image_set.all %}
+    <img src="{{ image.image.url }}" alt="Game Image" class="game-image">
+    {% endfor %}
+    </div>
+
+    <p>Rule: {{ game.rule }}</p>
+
+    {% if game.link %}
+    <div class="video-container">
+        <iframe width="560" height="315" src="{{ game.link }}" title="{{ game.name }}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+    </div>
+    {% endif %}
+
+    <a href="#" class="btn">Go to Top</a>
+</div>
+
+<script>
+    const goBackButton = document.getElementById('goBackButton');
+
+    goBackButton.addEventListener('click', () => {
+        window.history.back();
+    });
+</script>
+</body>
+</html>
+{% endblock %}

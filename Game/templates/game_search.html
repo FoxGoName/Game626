@@ -1,0 +1,175 @@
+
+<!DOCTYPE html>
+{% extends 'base.html' %}
+{% block mymessage %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+         .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .game-item:hover {
+            transform: translateY(-13px);
+        }
+
+        .game-list {
+            list-style-type: none;
+            padding: 0;
+             display: flex;
+             flex-wrap: wrap;
+        }
+
+        .game-item {
+            width: 300px;
+            height: 350px;
+            background-color: white;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin: 20px;
+            transition: transform 0.3s ease;
+        }
+
+        .game-item h2 {
+            color: #333;
+            border-bottom: 3px solid #ccc;
+            padding-bottom: 10px;
+            margin-top: 0;
+        }
+
+        .game-item p {
+            margin: 5px 0;
+        }
+
+        .game-item img {
+            max-height: 150px;
+            margin-right: 10px;
+        }
+
+        .game-item a {
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .pagination a {
+            color: #007bff;
+            padding: 8px 16px;
+            text-decoration: none;
+            transition: background-color 0.3s ease;
+        }
+
+        .pagination a:hover {
+            background-color: #f2f2f2;
+        }
+
+        .pagination .current {
+            background-color: #007bff;
+            color: white;
+            padding: 8px 16px;
+        }
+
+        .button {
+              border: none;
+              color: white;
+              padding: 8px 16px;
+              text-align: center;
+              text-decoration: none;
+              display: inline-block;
+              font-size: 16px;
+              margin: 4px 2px;
+              transition-duration: 0.4s;
+              cursor: pointer;
+        }
+        .button2 {
+              background-color: white;
+              color: black;
+              border: 2px solid #008CBA;
+        }
+
+        .button2:hover {
+              background-color: #008CBA;
+              color: white;
+        }
+
+        .searchBar{
+               padding: 8px 16px;
+               font-size: 16px;
+        }
+
+        a.no-underline {
+                  text-decoration: none;
+                  color: inherit;
+        }
+
+    </style>
+</head>
+<body>
+<div class="container">
+        {% if games %}
+        <h2>Search Results</h2>
+            <ol class="game-list">
+                {% for game in games %}
+                   {% if game.type == 'ETG' or game.type == 'SLOT' %}
+                <a href="{% url 'game_detail' game.id %}" class="no-underline">
+                    <li class="game-item">
+                    <h2>{{ game.name }}</h2>
+                    <p>Studio: {{ game.brand }}</p>
+                    <p>Jurisdiction:
+                        <div>
+                        {% for jurisdiction in game.jurisdiction_set.all %}
+                        <div style="display: inline-block; background-color: lightgrey; margin:2pt">[{{ jurisdiction.jurisdiction }}]</div>
+                        {% endfor %}
+                        </div>
+                    </p>
+                    <div class="game-images">
+                        {% for image in game.image_set.all %}
+                           {% if forloop.first %}
+                        <img src="{{ image.image.url }}" alt="Game Image" style="height: auto; width: auto">
+                           {% endif %}
+                        {% endfor %}
+                    </div>
+                    <p>Rule: {{ game.rule }}</p>
+                    {% if game.link %}
+                    <iframe width="560" height="315" src="{{ game.link }}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                    {% endif %}
+                </li>
+                </a>
+                   {% endif %}
+                {% endfor %}
+            </ol>
+        {% else %}
+        <p>No games found.</p>
+        {% endif %}
+
+        <div class="pagination">
+            <span class="step-links">
+                {% if page_obj.has_previous %}
+                <a href="?q={{ query }}&page=1">&laquo; First</a>
+                <a href="?q={{ query }}&page={{ page_obj.previous_page_number }}">Previous</a>
+                {% endif %}
+
+                <span class="current">
+                    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+                </span>
+
+                {% if page_obj.has_next %}
+                <a href="?q={{ query }}&page={{ page_obj.next_page_number }}">Next</a>
+                <a href="?q={{ query }}&page={{ page_obj.paginator.num_pages }}">&raquo; Last</a>
+                {% endif %}
+            </span>
+        </div>
+    </div>
+</body>
+</html>
+{% endblock %}
