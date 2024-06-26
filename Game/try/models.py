@@ -6,6 +6,11 @@ class Game(models.Model):
     name = models.CharField(max_length=100)
     rule = models.TextField()
     link = models.URLField(null=True, blank=True)
+    TYPE_CHOICES = [
+        ('ETG', 'ETG'),
+        ('SLOT', 'Slot'),
+    ]
+    type = models.CharField(max_length=100, choices=TYPE_CHOICES, default='SLOT')
 
     def __str__(self):
         return self.name
@@ -24,9 +29,11 @@ class Jurisdiction(models.Model):
         ('US FL-SEMINOLE', 'US FL-Seminole'),
         ('US OKLA', 'US OKLA'),
         ('US OKLA-CHICKSAW', 'US OKLA-Chicksaw'),
+        ('US OKLA-CHOCTAW', 'US OKLA-Choctaw'),
         ('US MISSISSPPI', 'US Mississppi'),
         ('US MS CHOCTAW', 'US MS Choctaw'),
         ('PUERTO RICO', 'Puerto Rico'),
+        ('US ARKANSAS', 'US Arkansas'),
         ('US NORTH-DAKOTA', 'US North-Dakota'),
         ('US NEBRASKA', 'US Nebraska'),
     ]
